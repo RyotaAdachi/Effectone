@@ -3,6 +3,9 @@
  * @brief When the door open, sound a effect
  * @author Ryota ADACHI
  */
+#define BUZZER_PIN 3
+#define LED_PIN 13
+#define SWITCH_PIN 14
 
 enum state {
   CLOSE,
@@ -15,23 +18,32 @@ state State = CLOSE;
  * @brief Init
  */
 void setup() {
-  pinMode(14, INPUT);
-  pinMode(13, OUTPUT);
+  pinMode(SWITCH_PIN, INPUT);
+  pinMode(LED_PIN, OUTPUT);
 }
 
 /**
  * @brief Main loop
  */
 void loop() {
-  if ( State == CLOSE && digitalRead(14) == HIGH) {
-    digitalWrite(13, HIGH);
-    EffectZelda(3, 150);
-    digitalWrite(13, LOW);
+  if ( State == CLOSE && digitalRead(SWITCH_PIN) == HIGH) {
+    // LED ON
+    digitalWrite(LED_PIN, HIGH);
+
+    // Sound Effect
+    EffectZelda(BUZZER_PIN, 150);
+
+    // LED OFF
+    digitalWrite(LED_PIN, LOW);
+
+    // State -> OPEN
     State = OPEN;
   }
-  else if ( State == OPEN && digitalRead(14) == LOW) {
+  else if ( State == OPEN && digitalRead(SWITCH_PIN) == LOW) {
+    // State -> CLOSE
     State = CLOSE;
   }
+  delay(100);
 }
 
 /**
