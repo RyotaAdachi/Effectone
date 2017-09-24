@@ -5,7 +5,8 @@
  */
 #define BUZZER_PIN 3
 #define LED_PIN 13
-#define SWITCH_PIN 14
+#define SWITCH_PIN 11
+#define SWITCH_PIN_REF 12
 
 enum state {
   CLOSE,
@@ -19,27 +20,24 @@ state State = CLOSE;
  */
 void setup() {
   pinMode(SWITCH_PIN, INPUT);
+  pinMode(SWITCH_PIN_REF, OUTPUT);
   pinMode(LED_PIN, OUTPUT);
+  digitalWrite(SWITCH_PIN_REF, HIGH);
 }
 
 /**
  * @brief Main loop
  */
 void loop() {
-  if ( State == CLOSE && digitalRead(SWITCH_PIN) == HIGH) {
-    // LED ON
-    digitalWrite(LED_PIN, HIGH);
-
+  digitalWrite(LED_PIN, digitalRead(SWITCH_PIN));
+  if ( State == CLOSE && digitalRead(SWITCH_PIN) == LOW) {
     // Sound Effect
-    EffectZelda(BUZZER_PIN, 150);
-
-    // LED OFF
-    digitalWrite(LED_PIN, LOW);
+    EffectZelda(BUZZER_PIN, 170);
 
     // State -> OPEN
     State = OPEN;
   }
-  else if ( State == OPEN && digitalRead(SWITCH_PIN) == LOW) {
+  else if ( State == OPEN && digitalRead(SWITCH_PIN) == HIGH) {
     // State -> CLOSE
     State = CLOSE;
   }
